@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AKShop — Интернет-магазин электроники</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header>
+    <div class="container header-inner">
+      <div class="logo" id="logo-btn">
+        <span class="logo-badge">AK</span>
+        <span>AKShop</span>
+      </div>
+
+      <nav class="nav-links">
+        <button class="nav-link" id="nav-phones">Телефоны</button>
+        <button class="nav-link" id="nav-accessories">Аксессуары</button>
+      </nav>
+
+      <button class="btn" id="open-cart-btn">
+        <span>Корзина</span>
+        <span class="cart-badge" id="cart-count">0</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="container" id="shop-view">
+    
+
+    <section class="news-slider">
+      <div class="slider-content">
+        <div class="slider-text">
+          <span class="slider-tag">⚡ Главная Новинка</span>
+          <h2 class="slider-title" id="slide-title">Samsung Galaxy Z Fold 8</h2>
+          <p class="slider-desc" id="slide-desc">
+            Прорывной гибкий дисплей 2026 года, ультратонкий титановый корпус и глубокая интеграция с персональным AI-помощником.
+          </p>
+          <div class="slider-controls">
+            <button class="slider-arrow" id="prev-slide-btn">◀</button>
+            <button class="slider-arrow" id="next-slide-btn">▶</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    
+    <section id="phones-section">
+      <div class="section-title">
+        <span>Смартфоны</span>
+      </div>
+      <div class="product-grid" id="phones-grid"></div>
+    </section>
+
+    
+    <section id="accessories-section">
+      <div class="section-title">
+        <span>Аксессуары</span>
+      </div>
+      <div class="product-grid" id="accessories-grid"></div>
+    </section>
+
+  </main>
+
+  <main class="container hidden" id="view-404">
+    <div class="page-404">
+      <div class="code-404">404</div>
+      <h1 style="font-size: 28px; font-weight: 800; margin-bottom: 10px;">Страница не найдена</h1>
+      <p style="color: var(--text-muted); margin-bottom: 25px;">К сожалению, запрашиваемый ресурс не существует или был удален.</p>
+      <button class="btn" id="back-home-btn">Вернуться на главную</button>
+    </div>
+  </main>
+
+  <div class="modal-overlay hidden" id="cart-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title" id="modal-header-text">Ваша корзина</div>
+        <button class="close-btn" id="close-modal-btn">✕</button>
+      </div>
+
+      
+      <div id="cart-items-view">
+        <div class="modal-body" id="cart-items-list"></div>
+        <div class="modal-footer" id="cart-footer">
+          <div class="total-row">
+            <span>Итого:</span>
+            <span id="cart-total-price" style="color: var(--primary);">0 ₽</span>
+          </div>
+          <button class="btn" id="checkout-btn" style="width: 100%; padding: 14px;">Оформить заказ</button>
+        </div>
+      </div>
+
+
+      <div class="modal-body hidden" id="order-success-view">
+        <div class="order-success-box">
+          <div style="font-size: 50px; margin-bottom: 10px;">✅</div>
+          <h2 style="font-size: 22px; font-weight: 800;">Спасибо за ваш заказ!</h2>
+          <p style="color: var(--text-muted); font-size: 14px; margin-top: 5px;">Ваша заявка успешно принята в обработку.</p>
+          
+          <div class="order-number" id="generated-order-num">Ваш заказ №0000-0000-0000</div>
+          
+          <button class="btn" id="finish-order-btn" style="width: 100%;">Закрыть и очистить корзину</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="toast hidden" id="toast-msg">Товар добавлен!</div>
+
+  <footer>
+    <div class="container">
+      <p>@2026 AKShop - учебный проект</p>
+      <a class="footer-link" id="link-404">Страница 404</a>
+    </div>
+  </footer>
+  <script src="script.js"></script>
+</body>
+</html>
+const newsData = [
+  {
+    title: "Samsung Galaxy Z Fold 8",
+    desc: "Прорывной гибкий дисплей 2026 года, ультратонкий титановый корпус и глубокая интеграция с персональным AI-помощником."
+  },
+  {
+    title: "Xiaomi 18 Pro Max",
+    desc: "Новый флагман с квадрокамерой Leica, емким аккумулятором 7000 мАч и рекордной сверхбыстрой зарядкой 210 Вт."
+  }
+];
+const phonesData = [
+  { id: 'p1', brand: 'Apple', name: 'Apple iPhone 17 Pro Max', image: 'image/iphone.jpg', color: 'Титановый синий', storage: '512 ГБ', material: 'Титан + стекло', price: 159990 },
+  { id: 'p2', brand: 'Samsung', name: 'Samsung Galaxy S26 Ultra', image: 'image/samsung.jpg', color: 'Черный', storage: '1 ТБ', material: 'Титан', price: 179999 },
+  { id: 'p3', brand: 'Xiaomi', name: 'Xiaomi 17 Ultra Leica Edition', image: 'image/xiaomi.png', color: 'Изумрудный', storage: '512 ГБ', material: 'Эко-кожа', price: 109999 },
+  { id: 'p4', brand: 'Google', name: 'Google Pixel 10 Pro', image: 'image/pixel.jpg', color: 'Фарфоровый', storage: '256 ГБ', material: 'Переработанный металл', price: 109999 },
+  { id: 'p5', brand: 'OnePlus', name: 'OnePlus 15 ', image: 'image/oneplus.png', color: 'Черный', storage: '512 ГБ', material: 'Керамика', price: 89999 },
+  { id: 'p6', brand: 'Sony', name: 'Sony Xperia 1 VII', image: 'image/sony.png', color: 'Матовый черный', storage: '512 ГБ', material: 'Закаленное стекло', price: 109999 },
+  { id: 'p7', brand: 'Huawei', name: 'Huawei Mate XT Ultimate Design', image: 'image/huawei.png', color: 'красный', storage: '1 ТБ', material: 'Керамика + Алюминий', price: 259999 }
+];
+
+const accessoriesData = [
+  { id: 'a1', emoji: '🎧', name: 'Наушники Apple AirPods Pro 2', price: 24999 },
+  { id: 'a2', emoji: '🎧', name: 'Наушники Samsung Galaxy Buds3 Pro', price: 18999 },
+  { id: 'a3', emoji: '🔋', name: 'Повербанк UltraCharge 20000 mAh', price: 4999 },
+  { id: 'a4', emoji: '⌚', name: 'Смарт-часы SmartWatch 9 Pro', price: 15999 },
+  { id: 'a5', emoji: '🔌', name: 'Кабель USB-C Fast Charge 2m', price: 1499 },
+  { id: 'a6', emoji: '📱', name: 'Защитное стекло 9H Tempered Glass', price: 999 }
+];
+
+
+let currentSlide = 0;
+let cart = [];
+
+
+function formatPrice(val) {
+  return val.toLocaleString('ru-RU') + ' ₽';
+}
+
+const shopView = document.getElementById('shop-view');
+const view404 = document.getElementById('view-404');
+const cartModal = document.getElementById('cart-modal');
+const cartItemsList = document.getElementById('cart-items-list');
+const cartTotalPrice = document.getElementById('cart-total-price');
+const cartCountBadge = document.getElementById('cart-count');
+const cartItemsView = document.getElementById('cart-items-view');
+const orderSuccessView = document.getElementById('order-success-view');
+const generatedOrderNum = document.getElementById('generated-order-num');
+const modalHeaderText = document.getElementById('modal-header-text');
+const toastMsg = document.getElementById('toast-msg');
+
+function renderPhones() {
+  const container = document.getElementById('phones-grid');
+  container.innerHTML = phonesData.map(phone => `
+    <div class="product-card">
+      <div>
+        <div class="photo-placeholder">
+          <img src="${phone.image}" alt="${phone.name}" class="phone-img">
+        </div>
+        <div class="product-name">${phone.name}</div>
+        <div class="spec-list">
+          <div class="spec-item"><span class="spec-label">Цвет:</span> <span class="spec-value">${phone.color}</span></div>
+          <div class="spec-item"><span class="spec-label">Объем памяти:</span> <span class="spec-value">${phone.storage}</span></div>
+          <div class="spec-item"><span class="spec-label">Материал:</span> <span class="spec-value">${phone.material}</span></div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="price">${formatPrice(phone.price)}</div>
+        <button class="btn" onclick="addToCart('${phone.id}', 'phone')">В корзину</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderAccessories() {
+  const container = document.getElementById('accessories-grid');
+  container.innerHTML = accessoriesData.map(acc => `
+    <div class="product-card">
+      <div>
+        <div class="photo-placeholder" style="background-color: #ffffff;">
+          <div class="emoji-box">${acc.emoji}</div>
+        </div>
+        <div class="product-name">${acc.name}</div>
+        <div class="work-badge">Характеристики: <strong>работают</strong></div>
+      </div>
+      <div class="card-footer">
+        <div class="price">${formatPrice(acc.price)}</div>
+        <button class="btn" onclick="addToCart('${acc.id}', 'accessory')">В корзину</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function updateSlide() {
+  document.getElementById('slide-title').innerText = newsData[currentSlide].title;
+  document.getElementById('slide-desc').innerText = newsData[currentSlide].desc;
+}
+
+document.getElementById('next-slide-btn').addEventListener('click', () => {
+  currentSlide = (currentSlide + 1) % newsData.length;
+  updateSlide();
+});
+
+document.getElementById('prev-slide-btn').addEventListener('click', () => {
+  currentSlide = (currentSlide - 1 + newsData.length) % newsData.length;
+  updateSlide();
+});
+
+function addToCart(id, type) {
+  let itemData = type === 'phone' 
+    ? phonesData.find(p => p.id === id) 
+    : accessoriesData.find(a => a.id === id);
+
+  if (!itemData) return;
+
+  const existing = cart.find(item => item.id === id);
+  if (existing) {
+    existing.quantity += 1;
+  } else {
+    cart.push({
+      id: itemData.id,
+      name: itemData.name,
+      price: itemData.price,
+      quantity: 1
+    });
+  }
+
+  updateCartBadge();
+  showToast(`«${itemData.name}» добавлен в корзину!`);
+}
+
+function updateCartBadge() {
+  const totalCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+  cartCountBadge.innerText = totalCount;
+}
+
+function renderCartModal() {
+  if (cart.length === 0) {
+    cartItemsList.innerHTML = `
+      <div style="text-align: center; padding: 40px 10px; color: var(--text-muted);">
+        <div style="font-size: 40px; margin-bottom: 10px;">🛒</div>
+        <p style="font-weight: 600;">Ваша корзина пуста</p>
+      </div>
+    `;
+    cartTotalPrice.innerText = '0 ₽';
+    return;
+  }
+
+  let total = 0;
+  cartItemsList.innerHTML = cart.map(item => {
+    const itemTotal = item.price * item.quantity;
+    total += itemTotal;
+    return `
+      <div class="cart-item">
+        <div class="cart-item-info">
+          <div>
+            <div class="cart-item-title">${item.name}</div>
+            <div class="cart-item-price">${formatPrice(item.price)} / шт.</div>
+          </div>
+        </div>
+        <div class="qty-controls">
+          <button class="qty-btn" onclick="changeQty('${item.id}', -1)">-</button>
+          <span style="font-weight: 700; font-size: 14px;">${item.quantity}</span>
+          <button class="qty-btn" onclick="changeQty('${item.id}', 1)">+</button>
+          <button class="delete-btn" onclick="removeFromCart('${item.id}')">🗑️</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+  cartTotalPrice.innerText = formatPrice(total);
+}
+
+function changeQty(id, delta) {
+  const item = cart.find(i => i.id === id);
+  if (item) {
+    item.quantity += delta;
+    if (item.quantity <= 0) {
+      removeFromCart(id);
+    } else {
+      renderCartModal();
+      updateCartBadge();
+    }
+  }
+}
+function removeFromCart(id) {
+  cart = cart.filter(i => i.id !== id);
+  renderCartModal();
+  updateCartBadge();
+}
+
+document.getElementById('open-cart-btn').addEventListener('click', () => {
+  cartItemsView.classList.remove('hidden');
+  orderSuccessView.classList.add('hidden');
+  modalHeaderText.innerText = 'Ваша корзина';
+  renderCartModal();
+  cartModal.classList.remove('hidden');
+});
+
+document.getElementById('close-modal-btn').addEventListener('click', () => {
+  cartModal.classList.add('hidden');
+});
+
+document.getElementById('checkout-btn').addEventListener('click', () => {
+  if (cart.length === 0) return;
+
+  const rand = () => Math.floor(1000 + Math.random() * 9000);
+  generatedOrderNum.innerText = `Ваш заказ №${rand()}-${rand()}-${rand()}`;
+  
+  cartItemsView.classList.add('hidden');
+  orderSuccessView.classList.remove('hidden');
+  modalHeaderText.innerText = 'Заказ оформлен!';
+});
+
+document.getElementById('finish-order-btn').addEventListener('click', () => {
+  cart = [];
+  updateCartBadge();
+  cartModal.classList.add('hidden');
+});
+
+function showToast(text) {
+  toastMsg.innerText = text;
+  toastMsg.classList.remove('hidden');
+  setTimeout(() => {
+    toastMsg.classList.add('hidden');
+  }, 2000);
+}
+
+
+document.getElementById('link-404').addEventListener('click', () => {
+  shopView.classList.add('hidden');
+  view404.classList.remove('hidden');
+  window.scrollTo(0, 0);
+});
+
+function showShop() {
+  view404.classList.add('hidden');
+  shopView.classList.remove('hidden');
+}
+
+document.getElementById('back-home-btn').addEventListener('click', () => {
+  showShop();
+  window.scrollTo(0, 0);
+});
+
+document.getElementById('logo-btn').addEventListener('click', () => {
+  showShop();
+  window.scrollTo(0, 0);
+});
+
+document.getElementById('nav-phones').addEventListener('click', () => {
+  showShop();
+  document.getElementById('phones-section').scrollIntoView();
+});
+
+document.getElementById('nav-accessories').addEventListener('click', () => {
+  showShop();
+  document.getElementById('accessories-section').scrollIntoView();
+});
+
+window.onload = function() {
+  renderPhones();
+  renderAccessories();
+  updateSlide();
+};
+
+
+
+:root {
+  --primary: #482bb0;
+  --primary-hover: #371e8a;
+  --primary-light: #efeafc;
+  --bg-peach: #fff3e6;
+  --card-bg: #ffffff;
+  --border-color: #fbe2d0;
+  --text-main: #1f2937;
+  --text-muted: #6b7280;
+  --success-bg: #ecfdf5;
+  --success-text: #065f46;
+  --radius-lg: 20px;
+  --radius-md: 12px;
+  --radius-sm: 8px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  animation: none !important;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease !important;
+  transform: none !important;
+}
+
+body {
+  background-color: var(--bg-peach);
+  color: var(--text-main);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.5;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  width: 100%;
+}
+
+.hidden {
+  display: none !important;
+}
+
+header {
+  background-color: #ffffff;
+  border-bottom: 1px solid var(--border-color);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 70px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text-main);
+  text-decoration: none;
+}
+
+.logo-badge {
+  background-color: var(--primary);
+  color: #ffffff;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  font-weight: 900;
+}
+
+.nav-links {
+  display: flex;
+  gap: 25px;
+}
+
+.nav-link {
+  background: none;
+  border: none;
+  color: var(--text-main);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.nav-link:hover {
+  color: var(--primary);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background-color: var(--primary);
+  color: #ffffff;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background-color: var(--primary-hover);
+}
+
+.cart-badge {
+  background-color: #f59e0b;
+  color: #000000;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 999px;
+  margin-left: 4px;
+}
+
+.news-slider {
+  background: linear-gradient(135deg, #1e1b4b 0%, #31107d 50%, var(--primary) 100%);
+  color: #ffffff;
+  border-radius: var(--radius-lg);
+  padding: 35px;
+  margin: 30px 0;
+  position: relative;
+}
+
+.slider-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.slider-text {
+  max-width: 750px;
+}
+
+.slider-tag {
+  display: inline-block;
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #fcd34d;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 999px;
+  margin-bottom: 12px;
+}
+
+.slider-title {
+  font-size: 32px;
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+
+.slider-desc {
+  font-size: 16px;
+  color: #e0e7ff;
+  margin-bottom: 20px;
+}
+
+.slider-controls {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.slider-arrow {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.slider-arrow:hover {
+  background-color: #ffffff;
+  color: var(--primary);
+}
+
+.section-title {
+  font-size: 26px;
+  font-weight: 800;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.section-subtitle {
+  font-size: 14px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+  margin-bottom: 50px;
+}
+
+@media (max-width: 900px) {
+  .product-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .product-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.product-card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.product-card:hover {
+  border-color: var(--primary);
+}
+
+.photo-placeholder {
+  background-color: var(--bg-peach);
+  border: 1px dashed var(--border-color);
+  border-radius: var(--radius-md);
+  height: 180px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 15px;
+  color: var(--text-muted);
+  font-size: 13px;
+  text-align: center;
+  padding: 10px;
+}
+
+.phone-icon-mock {
+  font-size: 40px;
+  margin-bottom: 8px;
+}
+
+.phone-img {
+  width: 100%;
+  height: 160px;
+  object-fit: contain;
+  display: block;
+}
+
+.photo-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.emoji-box {
+  font-size: 60px;
+}
+
+.product-name {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: var(--text-main);
+}
+
+.spec-list {
+  background-color: #f9fafb;
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  margin-bottom: 15px;
+  font-size: 13px;
+}
+
+.spec-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.spec-item:last-child {
+  margin-bottom: 0;
+}
+
+.spec-label {
+  color: var(--text-muted);
+}
+
+.spec-value {
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.work-badge {
+  background-color: var(--success-bg);
+  color: var(--success-text);
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 15px;
+  display: block;
+  border: 1px solid #a7f3d0;
+}
+
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 12px;
+  border-top: 1px solid #f3f4f6;
+}
+
+.price {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal-card {
+  background-color: var(--card-bg);
+  border-radius: var(--radius-lg);
+  max-width: 550px;
+  width: 100%;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+}
+
+.modal-header {
+  padding: 20px;
+  background-color: var(--bg-peach);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-title {
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  color: var(--text-muted);
+}
+
+.close-btn:hover {
+  color: var(--text-main);
+}
+
+.modal-body {
+  padding: 20px;
+  overflow-y: auto;
+  flex-grow: 1;
+}
+
+.cart-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.cart-item-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.cart-item-title {
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.cart-item-price {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.qty-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.qty-btn {
+  width: 28px;
+  height: 28px;
+  background-color: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.qty-btn:hover {
+  background-color: #e5e7eb;
+}
+
+.delete-btn {
+  background: none;
+  border: none;
+  color: #ef4444;
+  cursor: pointer;
+  font-size: 16px;
+  margin-left: 10px;
+}
+
+.delete-btn:hover {
+  color: #dc2626;
+}
+
+.modal-footer {
+  padding: 20px;
+  background-color: var(--bg-peach);
+  border-top: 1px solid var(--border-color);
+}
+
+.total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.order-success-box {
+  text-align: center;
+  padding: 30px 10px;
+}
+
+.order-number {
+  background-color: var(--bg-peach);
+  border: 2px dashed var(--primary);
+  padding: 15px;
+  border-radius: var(--radius-md);
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--primary);
+  margin: 20px 0;
+}
+
+footer {
+  background-color: #ffffff;
+  border-top: 1px solid var(--border-color);
+  padding: 30px 0;
+  margin-top: auto;
+  text-align: center;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.footer-link {
+  color: var(--primary);
+  font-weight: 700;
+  text-decoration: underline;
+  cursor: pointer;
+  display: inline-block;
+  margin-top: 8px;
+}
+
+.footer-link:hover {
+  color: var(--primary-hover);
+}
+
+.page-404 {
+  text-align: center;
+  padding: 80px 20px;
+  margin: auto 0;
+}
+
+.code-404 {
+  font-size: 96px;
+  font-weight: 900;
+  color: var(--primary);
+  line-height: 1;
+  margin-bottom: 10px;
+}
+
+.toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #1f2937;
+  color: #ffffff;
+  padding: 12px 20px;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 600;
+  z-index: 2000;
+}

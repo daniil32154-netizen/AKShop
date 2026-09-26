@@ -455,10 +455,6 @@ header {
   margin-left: 10px;
 }
 
-.delete-btn:hover {
-  color: #dc2626;
-}
-
 .modal-footer {
   padding: 20px;
   background-color: var(--bg-peach);
@@ -700,7 +696,6 @@ footer {
     font-size: 16px;
   }
 
-  /* 404 и подвал */
   .code-404 {
     font-size: 72px;
   }

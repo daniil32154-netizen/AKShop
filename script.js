@@ -19,12 +19,12 @@ const phonesData = [
 ];
 
 const accessoriesData = [
-  { id: 'a1', emoji: '🎧', name: 'Наушники Apple AirPods Pro 2', price: 24999 },
-  { id: 'a2', emoji: '🎧', name: 'Наушники Samsung Galaxy Buds3 Pro', price: 18999 },
-  { id: 'a3', emoji: '🔋', name: 'Повербанк UltraCharge 20000 mAh', price: 4999 },
-  { id: 'a4', emoji: '⌚', name: 'Смарт-часы SmartWatch 9 Pro', price: 15999 },
-  { id: 'a5', emoji: '🔌', name: 'Кабель USB-C Fast Charge 2m', price: 1499 },
-  { id: 'a6', emoji: '📱', name: 'Защитное стекло 9H Tempered Glass', price: 999 }
+  { id: 'a1', emoji: '🎧', name: 'Наушники Apple AirPods Pro 2', tech: 'шумоподовление', price: 24999 },
+  { id: 'a2', emoji: '🎧', name: 'Наушники Samsung Galaxy Buds3 Pro', tech: 'шумоподовление', price: 18999 },
+  { id: 'a3', emoji: '🔋', name: 'Повербанк UltraCharge 20000 mAh', tech: '67W зарядка', price: 4999 },
+  { id: 'a4', emoji: '⌚', name: 'Смарт-часы SmartWatch 9 Pro', tech: 'AI голосовой помощник', price: 15999 },
+  { id: 'a5', emoji: '🔌', name: 'Кабель USB-C Fast Charge 2m', tech: 'плетенный, 67W', price: 1499 },
+  { id: 'a6', emoji: '📱', name: 'Защитное стекло 9H Tempered Glass', tech: 'тонкое, безрамочное', price: 999 }
 ];
 
 
@@ -80,7 +80,7 @@ function renderAccessories() {
           <div class="emoji-box">${acc.emoji}</div>
         </div>
         <div class="product-name">${acc.name}</div>
-        <div class="work-badge">Характеристики: <strong>работают</strong></div>
+        <div class="work-badge"><span>Характеристики: </span>${acc.tech}</div>
       </div>
       <div class="card-footer">
         <div class="price">${formatPrice(acc.price)}</div>
